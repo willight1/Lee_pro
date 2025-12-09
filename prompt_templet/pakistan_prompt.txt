@@ -1,0 +1,80 @@
+You are an expert steel tariff and antidumping analyst. Your task is to extract structured information from Pakistan National Tariff Commission (NTC) anti-dumping notices (e.g. A.D.C No. XX/20XX/NTC/CRC).
+
+Given the text from a PDF document, extract the following information for each **exporting country or company** mentioned:
+
+Required Fields:
+1. issuing_country: Always "Pakistan"
+2. country: The country being investigated (e.g., "Chinese Taipei", "European Union", "Korea", "Vietnam", "China")
+3. tariff_type: Always "Antidumping"
+4. tariff_rate: The final anti-dumping duty rate (as decimal, e.g., 0 for 0%, 6.18 for 6.18%)
+5. effective_date_from: The date these definitive duties become effective (format: YYYY-MM-DD)
+6. effective_date_to: Leave blank unless a clear end date is explicitly stated (e.g. an order that clearly specifies both start and end dates)
+7. investigation_period_from: Start date of the dumping investigation period (format: YYYY-MM-DD)
+8. investigation_period_to: End date of the dumping investigation period (format: YYYY-MM-DD)
+9. company: 
+   - If duties are imposed on all exporters/producers from a country, use "All exporters"
+   - Otherwise, use the full exporter/producer name if listed
+10. case_number: The NTC case number (e.g., "A.D.C No. 60/2021/NTC/CRC")
+11. product_description: Product description of the investigated product
+12. note: Additional notes about exclusions, injury period, exemptions, duration, PCT codes, or any other relevant information
+
+Instructions:
+- Extract information for **each exporting country and/or company** mentioned separately.
+- Convert all dates to YYYY-MM-DD format (e.g., "February 03, 2022" → "2022-02-03", "August 23, 2021" → "2021-08-23").
+- Convert duty rates to decimal numbers (e.g., "6.18 percent" → 6.18, "17.25%" → 17.25, "0.00 percent" → 0).
+- If a field is not found in the text, use empty string "".
+- For Pakistan NTC notices, pay attention to:
+  - Phrases like "for a period of five years effective from..." for the **effective_date_from**.
+  - Tables listing "Definitive Anti-dumping Duty Rates" by **country** (Chinese Taipei, European Union, South Korea, Vietnam, etc.).
+  - Sections titled "Investigated Product", "Period of Investigation (POI)", "Determination of Dumping", "Injury to the Domestic Industry", and "Imposition of Definitive Anti-dumping Duties".
+  - Separate periods for dumping and injury investigations. Use the **dumping investigation period** for investigation_period_from / investigation_period_to, and put the **injury period** into the note field.
+- If duties clearly apply to all exporters from a country (e.g. one rate per country for "all exporters"), set:
+  - country: that exporting country name
+  - company: "All exporters"
+- If specific exporters are listed with individual rates, create one entry per exporter.
+- If exclusions or special grades are listed (for example, automotive outer skin grades and Tin Mill Black Plate (TMBP) excluded from scope), include those details in the **note** field.
+- Also note any exemptions such as "definitive antidumping duties will not be levied on imports used as inputs in products destined solely for exports under customs duty exemption schemes".
+
+Country Name Normalization Examples:
+- "Republic of Korea" → "Korea"
+- "Socialist Republic of Vietnam" → "Vietnam"
+- "European Union" → "European Union"
+- "Chinese Taipei" → "Chinese Taipei"
+
+Return your response as a JSON array of objects, where each object represents one **exporting country or company** with all the fields above.
+
+Example output format (based on the cold-rolled coils/sheets case for Chinese Taipei, EU, Korea, and Vietnam in Pakistan) [see `file:///c:/Users/jminlee/Lee_pro/PDF/PAKISTAN_CR_Antidumping_A.D.C_No._60.pdf`]:
+[
+  {
+    "issuing_country": "Pakistan",
+    "country": "Chinese Taipei",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 6.18,
+    "effective_date_from": "2021-08-23",
+    "effective_date_to": "",
+    "investigation_period_from": "2019-10-01",
+    "investigation_period_to": "2020-09-30",
+    "company": "All exporters",
+    "case_number": "A.D.C No. 60/2021/NTC/CRC",
+    "product_description": "Flat-rolled products of iron or non-alloy steel, cold-rolled (cold-reduced), not clad, plated or coated, of prime and secondary quality, thickness 0.15 mm to 3.00 mm, width up to 1250 mm, in coils or sheets (excluding specified automotive outer skin grades and Tin Mill Black Plate (TMBP) of thickness 0.30 mm or less)",
+    "note": "Definitive anti-dumping duties imposed for a period of five years effective from 2021-08-23; injury investigation period from 2017-10-01 to 2020-09-30; duties not levied on inputs used solely for export products covered by customs duty exemption schemes; PCT headings include 7209.1510, 7209.1590, 7209.1610, 7209.1690, 7209.1710, 7209.1790, 7209.1810, 7209.1899, 7209.2510, 7209.2590, 7209.2610, 7209.2690, 7209.2710, 7209.2790, 7209.2810 and 7209.2890"
+  },
+  {
+    "issuing_country": "Pakistan",
+    "country": "European Union",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 6.50,
+    "effective_date_from": "2021-08-23",
+    "effective_date_to": "",
+    "investigation_period_from": "2019-10-01",
+    "investigation_period_to": "2020-09-30",
+    "company": "All exporters",
+    "case_number": "A.D.C No. 60/2021/NTC/CRC",
+    "product_description": "Flat-rolled products of iron or non-alloy steel, cold-rolled (cold-reduced), not clad, plated or coated, of prime and secondary quality, thickness 0.15 mm to 3.00 mm, width up to 1250 mm, in coils or sheets (excluding specified automotive outer skin grades and Tin Mill Black Plate (TMBP) of thickness 0.30 mm or less)",
+    "note": "Same case and product as above; definitive duties for five years effective from 2021-08-23"
+  }
+]
+
+Now extract the information from the following text:
+
+

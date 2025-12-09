@@ -1,0 +1,85 @@
+You are an expert steel tariff and antidumping analyst. Your task is to extract structured information from Malaysian Customs Anti-Dumping Duties Orders (P.U. (A) documents).
+
+Given the text from a PDF document, extract the following information for each producer/exporter mentioned:
+
+Required Fields:
+1. issuing_country: Always "Malaysia"
+2. country: The country being investigated (e.g., "China", "Korea", "Chinese Taipei", "Thailand", "Vietnam")
+3. tariff_type: Always "Antidumping"
+4. tariff_rate: The anti-dumping duty rate (as decimal, e.g., 0 for 0%, 5.23 for 5.23%)
+5. effective_date_from: The date these duties become effective (format: YYYY-MM-DD)
+6. effective_date_to: The date these duties expire (format: YYYY-MM-DD)
+7. investigation_period_from: Leave blank unless specified
+8. investigation_period_to: Leave blank unless specified
+9. company: Full producer/exporter name
+10. case_number: The P.U. (A) number (e.g., "P.U. (A) 225/2023")
+11. product_description: Product description from the Schedule
+12. note: Additional notes about exemptions, extensions, or other relevant information
+
+Instructions:
+- Extract information for EACH producer/exporter mentioned separately
+- Convert all dates to YYYY-MM-DD format (Malaysian dates are often in "DD Month YYYY" format like "27 July 2023")
+- Convert duty rates to decimal numbers (e.g., "2.68%" becomes 2.68, "23.95%" becomes 23.95)
+- If a field is not found in the text, use empty string ""
+- Look for key phrases like:
+  - "This Order has effect for the period from... until..." for effective dates
+  - "Rate of Duties" or "Kadar Duti" for tariff rates
+  - "Producer/Exporter" or "Pengeluar/Pengeksport" for company names
+  - "Country" or "Negara" for target countries
+  - "Description of Goods" or "Perihalan Barang-Barang" for product descriptions
+- For companies exempted from duties (0% rate), still include them with tariff_rate: 0
+- If "Others" or "Lain-lain" is listed as producer/exporter, include it as a separate entry with the corresponding rate
+- Note any extensions (Pelanjutan/Extension) in the note field
+
+IMPORTANT - Company Name Extraction Rules:
+- Extract ONLY companies listed with Roman numeral markers (i), (ii), (iii), (iv), (v), (vi), etc. as the "company" field
+- Companies listed with letter markers (A), (B), (C), (D), etc. are EXCLUSIONS and should NOT be extracted as separate company entries
+- Instead, list excluded companies (A), (B), (C), (D) in the "note" field of the corresponding "Other producer or exporter" entry
+- Format for note field: "Excluding: [Company A], [Company B], [Company C], ..."
+- Example: If "(ii) Other producer or exporter" excludes "(A) Baoshan Iron & Steel Co., Ltd.; (B) Beijing Shougang Cold Rolling Co., Ltd.", then:
+  - company: "Other producer or exporter"
+  - note: "Excluding: Baoshan Iron & Steel Co., Ltd.; Beijing Shougang Cold Rolling Co., Ltd."
+
+Important Country Names Mapping:
+- "People's Republic of China" or "Republik Rakyat China" → "China"
+- "Republic of Korea" or "Republik Korea" → "Korea"
+- "Chinese Taipei" → "Chinese Taipei"
+- "Thailand" → "Thailand"
+- "Vietnam" or "Socialist Republic of Vietnam" → "Vietnam"
+
+Return your response as a JSON array of objects, where each object represents one producer/exporter with all the fields above.
+
+Example output format:
+[
+  {
+    "issuing_country": "Malaysia",
+    "country": "China",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 2.68,
+    "effective_date_from": "2023-07-27",
+    "effective_date_to": "2028-07-26",
+    "investigation_period_from": "",
+    "investigation_period_to": "",
+    "company": "Shanxi Taigang Stainless Steel Co., Ltd.",
+    "case_number": "P.U. (A) 225/2023",
+    "product_description": "Cold rolled stainless steel in coils, sheets or any other form with thickness between 0.3 millimetres to 6.5 millimetres and width of not more than 1,600 millimetres",
+    "note": "Administrative Review Order 2023; excludes BA finish, No.8 Mirror Finish, embossed, rigidised, etched, coloured finishes; excludes hardness >250 HV"
+  },
+  {
+    "issuing_country": "Malaysia",
+    "country": "China",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 23.95,
+    "effective_date_from": "2023-07-27",
+    "effective_date_to": "2028-07-26",
+    "investigation_period_from": "",
+    "investigation_period_to": "",
+    "company": "Others",
+    "case_number": "P.U. (A) 225/2023",
+    "product_description": "Cold rolled stainless steel in coils, sheets or any other form with thickness between 0.3 millimetres to 6.5 millimetres and width of not more than 1,600 millimetres",
+    "note": "All other Chinese producers/exporters"
+  }
+]
+
+Now extract the information from the following text:
+

@@ -1,0 +1,114 @@
+You are an expert steel tariff and antidumping analyst. Your task is to extract structured information from Australian Anti-Dumping Commission (ADC) inquiry reports.
+
+Given the text from a PDF document, extract the following information for each exporter/company mentioned:
+
+Required Fields:
+1. issuing_country: Always "Australia"
+2. country: The country being investigated (e.g., "China", "Korea", "Taiwan")
+3. tariff_type: Based on "Measure" column in the table:
+   - "IDD" (Interim Dumping Duty) → "Antidumping"
+   - "ICD" (Interim Countervailing Duty) → "Countervailing"
+4. tariff_rate: Extract from the "effective rate of duty" column in the "10. MEASURES" section table (as decimal, e.g., 0 for 0%, 5.23 for 5.23%)
+5. effective_date_from: The date measures become effective (format: YYYY-MM-DD)
+6. effective_date_to: The expiry date of measures if specified (format: YYYY-MM-DD)
+7. investigation_period_from: Start date of Inquiry Period (format: YYYY-MM-DD)
+8. investigation_period_to: End date of Inquiry Period (format: YYYY-MM-DD)
+9. company: Full exporter/company name from the table
+10. case_number: The ADN reference number (e.g., "ADN 2023/035") or Report number (e.g., "REP 611")
+11. product_description: Product description (e.g., "Zinc coated (galvanised) steel")
+12. note: Include the "Measure type" value from the table (e.g., "combination duty", "ad valorem duty", "floor price duty")
+
+CRITICAL - Data Extraction from "10. MEASURES" Section:
+- The main data should be extracted from tables in "Section 10. MEASURES" or "10.4 REVIEW OF VARIABLE FACTORS"
+- These tables contain: Country, Exporter, Measure (IDD/ICD), Measure type, and effective rate of duty
+- Extract EACH row from the table as a separate entry
+- "Measure" column determines tariff_type:
+  - IDD = Antidumping
+  - ICD = Countervailing
+- "Measure type" column goes into the note field (e.g., "combination duty", "ad valorem duty")
+- "effective rate of duty" column is the tariff_rate (convert percentage to decimal number)
+
+Instructions:
+- Extract information for EACH exporter/company mentioned in the measures tables separately
+- Convert all dates to YYYY-MM-DD format (Australian dates are often in "DD Month YYYY" format)
+- Convert margin rates to decimal numbers (e.g., "0.00 percent" becomes 0, "5.23 percent" becomes 5.23)
+- If a field is not found in the text, use empty string ""
+- For companies with BOTH IDD AND ICD entries, create separate entries for each
+- Include "All other exporters" or residual rates as separate entries
+
+Important Country Names Mapping:
+- "People's Republic of China" or "PRC" → "China"
+- "Republic of Korea" → "Korea"
+- "Taiwan" or "Chinese Taipei" → "Taiwan"
+
+Key Australian Anti-Dumping Terms:
+- "IDD" = Interim Dumping Duty → tariff_type: "Antidumping"
+- "ICD" = Interim Countervailing Duty → tariff_type: "Countervailing"
+- "Combination duty" = duty calculated using combination method
+- "Ad valorem duty" = percentage-based duty
+- "Floor price duty" = minimum price-based duty
+
+Return your response as a JSON array of objects, where each object represents one company/duty type combination with all the fields above.
+
+Example output format:
+[
+  {
+    "issuing_country": "Australia",
+    "country": "China",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 15.5,
+    "effective_date_from": "2023-08-07",
+    "effective_date_to": "2028-08-06",
+    "investigation_period_from": "2021-07-01",
+    "investigation_period_to": "2022-06-30",
+    "company": "Shandong Guanzhou Dingxin Plate Technology Co., Ltd",
+    "case_number": "ADN 2023/035",
+    "product_description": "Zinc coated (galvanised) steel",
+    "note": "Measure type: combination duty"
+  },
+  {
+    "issuing_country": "Australia",
+    "country": "China",
+    "tariff_type": "Countervailing",
+    "tariff_rate": 2.3,
+    "effective_date_from": "2023-08-07",
+    "effective_date_to": "2028-08-06",
+    "investigation_period_from": "2021-07-01",
+    "investigation_period_to": "2022-06-30",
+    "company": "Shandong Guanzhou Dingxin Plate Technology Co., Ltd",
+    "case_number": "ADN 2023/035",
+    "product_description": "Zinc coated (galvanised) steel",
+    "note": "Measure type: ad valorem duty"
+  },
+  {
+    "issuing_country": "Australia",
+    "country": "Korea",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 8.2,
+    "effective_date_from": "2023-08-07",
+    "effective_date_to": "2028-08-06",
+    "investigation_period_from": "2021-07-01",
+    "investigation_period_to": "2022-06-30",
+    "company": "KG Dongbu Steel Co., Ltd",
+    "case_number": "ADN 2023/035",
+    "product_description": "Zinc coated (galvanised) steel",
+    "note": "Measure type: combination duty"
+  },
+  {
+    "issuing_country": "Australia",
+    "country": "China",
+    "tariff_type": "Antidumping",
+    "tariff_rate": 25.0,
+    "effective_date_from": "2023-08-07",
+    "effective_date_to": "2028-08-06",
+    "investigation_period_from": "2021-07-01",
+    "investigation_period_to": "2022-06-30",
+    "company": "All other exporters",
+    "case_number": "ADN 2023/035",
+    "product_description": "Zinc coated (galvanised) steel",
+    "note": "Measure type: combination duty; residual rate"
+  }
+]
+
+Now extract the information from the following text:
+
