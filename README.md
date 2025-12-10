@@ -91,7 +91,6 @@
 |------|------|------|
 | ![OpenAI](https://img.shields.io/badge/OpenAI-2.9.0-412991?logo=openai&logoColor=white) | 2.9.0 | 지능형 데이터 추출을 위한 GPT-4o-mini API |
 | ![Pydantic](https://img.shields.io/badge/Pydantic-2.12.5-E92063?logo=pydantic&logoColor=white) | 2.12.5 | LLM용 데이터 검증 및 설정 관리 |
-| ![Tenacity](https://img.shields.io/badge/Tenacity-8.5.0-orange) | 8.5.0 | 지수 백오프를 사용한 API 호출 재시도 로직 |
 | ![Jiter](https://img.shields.io/badge/Jiter-0.12.0-blue) | 0.12.0 | LLM 응답을 위한 고속 JSON 파싱 |
 
 ### 🐍 백엔드 & 코어
@@ -122,15 +121,6 @@
 | ![PyDeck](https://img.shields.io/badge/PyDeck-0.9.1-green) | 0.9.1 | WebGL 기반 데이터 시각화 |
 | ![Jinja2](https://img.shields.io/badge/Jinja2-3.1.6-B41717?logo=jinja&logoColor=white) | 3.1.6 | 동적 콘텐츠를 위한 템플릿 엔진 |
 
-### 🌐 HTTP & 네트워킹
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| ![Requests](https://img.shields.io/badge/Requests-2.32.5-blue) | 2.32.5 | API 호출을 위한 HTTP 라이브러리 |
-| ![HTTPX](https://img.shields.io/badge/HTTPX-0.28.1-blue) | 0.28.1 | HTTP/2 지원 비동기 HTTP 클라이언트 |
-| ![HTTPCore](https://img.shields.io/badge/HTTPCore-1.0.9-lightblue) | 1.0.9 | 저수준 HTTP 전송 |
-| ![urllib3](https://img.shields.io/badge/urllib3-2.6.1-blue) | 2.6.1 | 연결 풀링을 지원하는 HTTP 클라이언트 |
-| ![Certifi](https://img.shields.io/badge/Certifi-2025.11.12-green) | 2025.11.12 | SSL/TLS용 루트 인증서 |
 
 ### 💾 데이터 저장 & 내보내기
 
@@ -147,14 +137,6 @@
 | ![Pydantic](https://img.shields.io/badge/Pydantic-2.12.5-E92063?logo=pydantic&logoColor=white) | 2.12.5 | Python 타입 힌트를 사용한 데이터 검증 |
 | ![JSONSchema](https://img.shields.io/badge/JSONSchema-4.25.1-blue) | 4.25.1 | JSON 데이터 검증 |
 | ![attrs](https://img.shields.io/badge/attrs-25.4.0-orange) | 25.4.0 | 보일러플레이트 없는 Python 클래스 |
-
-### 📝 마크다운 & 문서화
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| ![markdown-it-py](https://img.shields.io/badge/markdown--it--py-4.0.0-blue) | 4.0.0 | CommonMark 지원 마크다운 파서 |
-| ![Pygments](https://img.shields.io/badge/Pygments-2.19.2-yellow?logo=python&logoColor=white) | 2.19.2 | 코드 블록 구문 강조 |
-| ![Rich](https://img.shields.io/badge/Rich-13.9.4-orange) | 13.9.4 | 아름다운 터미널 포맷팅 및 로깅 |
 
 ### 🔧 개발 도구 & 유틸리티
 
@@ -175,12 +157,6 @@
 | ![gitdb](https://img.shields.io/badge/gitdb-4.0.12-orange) | 4.0.12 | GitPython용 Git 객체 데이터베이스 |
 | ![smmap](https://img.shields.io/badge/smmap-5.0.2-yellow) | 5.0.2 | Git용 메모리 맵 파일 지원 |
 
-### 🔒 보안 & 암호화
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| ![Cryptography](https://img.shields.io/badge/Cryptography-46.0.3-blue) | 46.0.3 | 암호화 레시피 및 기본 요소 |
-| ![cffi](https://img.shields.io/badge/cffi-2.0.0-green) | 2.0.0 | Python용 C 외부 함수 인터페이스 |
 
 ### 📦 시스템 & 플랫폼
 
